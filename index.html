@@ -41,13 +41,19 @@
       border-bottom: 1px solid rgba(23,60,58,.12);
       backdrop-filter: blur(10px);
     }
-    .nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 22px; }
+    .nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 22px; position: relative; }
     .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; font-weight: 800; color: var(--evergreen); letter-spacing: -.02em; }
     .mark { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; background: var(--evergreen); color: var(--gold); font-size: 23px; }
     .nav-links { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 18px; }
     .nav-links a { color: var(--evergreen); text-decoration: none; font-weight: 700; font-size: .95rem; }
     .nav-links a:hover { color: var(--clay); }
     .nav-links .button { color: var(--white); }
+
+    .skip-link { position: absolute; top: -40px; left: 8px; z-index: 100; padding: 10px 16px; border-radius: 6px; background: var(--evergreen); color: var(--white); text-decoration: none; font-weight: 700; transition: top .15s; }
+    .skip-link:focus { top: 8px; }
+
+    .nav-toggle { display: none; align-items: center; justify-content: center; width: 42px; height: 42px; border: 1px solid var(--line); border-radius: 8px; background: var(--white); color: var(--evergreen); cursor: pointer; }
+    .nav-toggle svg { width: 22px; height: 22px; }
 
     .hero {
       color: var(--white);
@@ -90,6 +96,12 @@
     .faith-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 0; padding: 0; list-style: none; }
     .faith-list li { padding: 14px 15px; border: 1px solid var(--line); border-radius: 9px; background: var(--white); color: var(--evergreen); font-weight: 700; }
 
+    .members { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .member { padding: 20px; border: 1px solid var(--line); border-radius: 12px; background: var(--white); }
+    .member .name { margin: 0 0 3px; color: var(--evergreen); font-weight: 800; font-size: 1.02rem; }
+    .member .role { margin: 0 0 6px; color: var(--gold); font-weight: 700; font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; }
+    .member .org { margin: 0; color: var(--muted); font-size: .92rem; }
+
     .events { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
     .event { display: flex; gap: 17px; padding: 23px; border: 1px solid var(--line); border-radius: 13px; background: var(--white); }
     .date { flex: 0 0 60px; height: 64px; display: grid; place-content: center; border-radius: 8px; background: var(--evergreen); color: var(--white); text-align: center; font-weight: 800; line-height: 1.05; }
@@ -118,6 +130,7 @@
       .hero-grid, .split, .join-grid { grid-template-columns: 1fr; }
       .symbol-card { min-height: 210px; }
       .cards, .events { grid-template-columns: 1fr; }
+      .members { grid-template-columns: 1fr; }
       .nav { padding: 12px 0; align-items: flex-start; }
       .nav-links { gap: 10px 14px; }
       .nav-links a { font-size: .86rem; }
@@ -126,7 +139,29 @@
       .container { width: min(100% - 30px, 1120px); }
       .brand { font-size: .9rem; }
       .mark { width: 36px; height: 36px; }
-      .nav-links { display: none; }
+
+      .nav-toggle { display: grid; }
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 2px;
+        padding: 10px;
+        border: 1px solid var(--line);
+        border-top: none;
+        border-radius: 0 0 12px 12px;
+        background: var(--white);
+        box-shadow: var(--shadow);
+      }
+      .nav-links.open { display: flex; }
+      .nav-links a { padding: 12px 10px; border-radius: 8px; }
+      .nav-links a:hover { background: #f1f5ef; }
+      .nav-links .button { text-align: center; }
+
       .hero { padding: 66px 0 56px; }
       section { padding: 58px 0; }
       .faith-list { grid-template-columns: 1fr; }
@@ -135,22 +170,31 @@
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to main content</a>
   <header class="site-header">
     <nav class="nav container" aria-label="Main navigation">
       <a class="brand" href="#home" aria-label="Rapid City Interfaith Council home">
         <span class="mark" aria-hidden="true">✦</span>
         <span>Rapid City<br>Interfaith Council</span>
       </a>
-      <div class="nav-links">
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav-links" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="nav-links" id="primary-nav-links">
         <a href="#about">About</a>
         <a href="#service">Service</a>
+        <a href="#members">Members</a>
         <a href="#events">Events</a>
         <a href="#join">Get Involved</a>
       </div>
     </nav>
   </header>
 
-  <main>
+  <main id="main">
     <section class="hero" id="home">
       <div class="container hero-grid">
         <div>
@@ -216,6 +260,133 @@
       </div>
     </section>
 
+    <section id="members">
+      <div class="container">
+        <div class="section-heading">
+          <h2>Council members.</h2>
+          <p>Representatives from participating congregations and community partners across the Black Hills. Reach out through a congregation directly, or use the general contact link below to reach the Council.</p>
+        </div>
+        <div class="members">
+          <article class="member">
+            <p class="name">Pastor David Piper</p>
+            <p class="role">Council Representative</p>
+            <p class="org">Atonement Lutheran / Piedmont Valley Lutheran</p>
+          </article>
+          <article class="member">
+            <p class="name">Linda Black</p>
+            <p class="role">Council Representative</p>
+            <p class="org">Atonement Lutheran</p>
+          </article>
+          <article class="member">
+            <p class="name">Steve Benn</p>
+            <p class="role">President</p>
+            <p class="org">Synagogue of the Hills</p>
+          </article>
+          <article class="member">
+            <p class="name">Rachel Lindvall</p>
+            <p class="role">Council Representative</p>
+            <p class="org">&nbsp;</p>
+          </article>
+          <article class="member">
+            <p class="name">Troy Nesbit</p>
+            <p class="role">President</p>
+            <p class="org">Church of Jesus Christ of Latter-day Saints</p>
+          </article>
+          <article class="member">
+            <p class="name">Amy Policky</p>
+            <p class="role">Founding Member</p>
+            <p class="org">&nbsp;</p>
+          </article>
+          <article class="member">
+            <p class="name">Scott Van Dam</p>
+            <p class="role">Council Representative</p>
+            <p class="org">&nbsp;</p>
+          </article>
+          <article class="member">
+            <p class="name">Amber Hoffmann</p>
+            <p class="role">Council Representative</p>
+            <p class="org">&nbsp;</p>
+          </article>
+          <article class="member">
+            <p class="name">Kari Scovel Hendrickson</p>
+            <p class="role">Council Representative</p>
+            <p class="org">Calvary Lutheran</p>
+          </article>
+          <article class="member">
+            <p class="name">Paula Jensen</p>
+            <p class="role">Council Representative</p>
+            <p class="org">&nbsp;</p>
+          </article>
+          <article class="member">
+            <p class="name">Malcom Chapman</p>
+            <p class="role">Council Representative</p>
+            <p class="org">&nbsp;</p>
+          </article>
+          <article class="member">
+            <p class="name">Bishop Troy Carr</p>
+            <p class="role">Council Representative</p>
+            <p class="org">Faith Temple Church of Christ in God</p>
+          </article>
+          <article class="member">
+            <p class="name">Dr. Sherry Goyal</p>
+            <p class="role">Council Representative</p>
+            <p class="org">Black Hills Hindu Temple and Community Center</p>
+          </article>
+          <article class="member">
+            <p class="name">Bhavin Sampat</p>
+            <p class="role">Council Representative</p>
+            <p class="org">&nbsp;</p>
+          </article>
+          <article class="member">
+            <p class="name">Dr. Deepak M. Goyal</p>
+            <p class="role">Council Representative</p>
+            <p class="org">&nbsp;</p>
+          </article>
+          <article class="member">
+            <p class="name">Pastor Erin Erickson</p>
+            <p class="role">Council Representative</p>
+            <p class="org">First Congregational United Church of Christ</p>
+          </article>
+          <article class="member">
+            <p class="name">Pastor</p>
+            <p class="role">Council Representative</p>
+            <p class="org">First United Methodist Church</p>
+          </article>
+          <article class="member">
+            <p class="name">Pastor Johnathan Old Horse</p>
+            <p class="role">Council Representative</p>
+            <p class="org">Woyatan Lutheran Church</p>
+          </article>
+          <article class="member">
+            <p class="name">Krystal Rencountre</p>
+            <p class="role">Council Representative</p>
+            <p class="org">Woyatan Lutheran Church</p>
+          </article>
+          <article class="member">
+            <p class="name">Sister Yvette Mallow</p>
+            <p class="role">Council Representative</p>
+            <p class="org">St. Martin Monastery</p>
+          </article>
+          <article class="member">
+            <p class="name">Matie Tyson</p>
+            <p class="role">Council Representative</p>
+            <p class="org">Unitarian Universalist Church of Rapid City</p>
+          </article>
+          <article class="member">
+            <p class="name">Dane</p>
+            <p class="role">Council Representative</p>
+            <p class="org">Newman Center</p>
+          </article>
+          <article class="member">
+            <p class="name">Marta Olsen-Rangitsch</p>
+            <p class="role">Council Representative</p>
+            <p class="org">Christian Science</p>
+          </article>
+        </div>
+        <p class="notice"><strong>Website editor note:</strong> Titles above are drawn from the internal member directory. Please confirm each person is comfortable being listed publicly (name, role, congregation) before launch, and update any that have changed. Personal phone numbers and personal email addresses have intentionally been omitted from this public page.</p>
+      </div>
+    </section>
+
     <section id="events">
       <div class="container">
         <div class="section-heading">
@@ -255,8 +426,8 @@
           <h2>Help strengthen our common life.</h2>
           <p>Whether you represent a congregation, spiritual community, nonprofit, or simply want to serve alongside your neighbors, we welcome your interest.</p>
         </div>
-        <!-- Replace the # with the council's confirmed email, contact form, or Facebook URL. -->
-        <a class="button" href="#contact">Contact us</a>
+        <!-- TODO: Replace with the council's confirmed official email, contact form, or Facebook URL before launch. -->
+        <a class="button" href="mailto:your-email@example.org">Contact us</a>
       </div>
     </section>
 
@@ -265,6 +436,7 @@
         <div class="section-heading" style="margin-bottom:0">
           <h2>Connect with us.</h2>
           <p>Before publishing, add an official Council email address and social-media link below. A shared organizational email is safer than publishing a volunteer’s personal address.</p>
+          <p><a href="mailto:your-email@example.org" style="color:var(--evergreen);font-weight:800">your-email@example.org</a></p>
         </div>
         <div>
           <details open>
@@ -294,6 +466,29 @@
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks = document.getElementById('primary-nav-links');
+
+    function closeMenu() {
+      navLinks.classList.remove('open');
+      navToggle.setAttribute('aria-expanded', 'false');
+      navToggle.setAttribute('aria-label', 'Open menu');
+    }
+
+    navToggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', String(isOpen));
+      navToggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+    });
+
+    navLinks.addEventListener('click', (e) => {
+      if (e.target.tagName === 'A') closeMenu();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeMenu();
+    });
   </script>
 </body>
 </html>
